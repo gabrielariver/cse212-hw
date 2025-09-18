@@ -23,14 +23,35 @@ public class Basketball
         reader.TextFieldType = FieldType.Delimited;
         reader.SetDelimiters(",");
         reader.ReadFields(); // ignore header row
-        while (!reader.EndOfData) {
+        while (!reader.EndOfData)
+        {
             var fields = reader.ReadFields()!;
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+
+            // Add points to the player's total (or create new entry if doesn't exist)
+            if (players.ContainsKey(playerId))
+            {
+                players[playerId] += points;
+            }
+            else
+            {
+                players[playerId] = points;
+            }
         }
 
         Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
 
-        var topPlayers = new string[10];
+        // Convert dictionary to array of key-value pairs and sort by points (descending)
+        var playerArray = players.ToArray();
+        Array.Sort(playerArray, (x, y) => y.Value.CompareTo(x.Value));
+
+        // Display top 10 players
+        Console.WriteLine("\nTop 10 Players by Total Career Points:");
+        Console.WriteLine("======================================");
+        for (int i = 0; i < Math.Min(10, playerArray.Length); i++)
+        {
+            Console.WriteLine($"{i + 1:D2}. {playerArray[i].Key} - {playerArray[i].Value:N0} points");
+        }
     }
 }
