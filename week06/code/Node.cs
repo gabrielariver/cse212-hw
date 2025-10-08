@@ -12,6 +12,12 @@ public class Node
     public void Insert(int value)
     {
         // TODO Start Problem 1
+        
+        // Do not allow duplicates
+        if (value == Data)
+        {
+            return; // Don't insert if the value already exists
+        }
 
         if (value < Data)
         {
@@ -34,12 +40,43 @@ public class Node
     public bool Contains(int value)
     {
         // TODO Start Problem 2
-        return false;
+        
+        // If we found the value, return true
+        if (value == Data)
+        {
+            return true;
+        }
+        
+        // If the value is less, search in the left subtree
+        if (value < Data)
+        {
+            if (Left is null)
+                return false; // Doesn't exist
+            else
+                return Left.Contains(value); // Search recursively
+        }
+        
+        // If the value is greater, search in the right subtree
+        else
+        {
+            if (Right is null)
+                return false; // Doesn't exist
+            else
+                return Right.Contains(value); // Search recursively
+        }
     }
 
     public int GetHeight()
     {
         // TODO Start Problem 4
-        return 0; // Replace this line with the correct return statement(s)
+        
+        // Height of the left subtree (0 if it doesn't exist)
+        int leftHeight = (Left is null) ? 0 : Left.GetHeight();
+        
+        // Height of the right subtree (0 if it doesn't exist)
+        int rightHeight = (Right is null) ? 0 : Right.GetHeight();
+        
+        // The height of the current node is 1 + the maximum height of its subtrees
+        return 1 + Math.Max(leftHeight, rightHeight);
     }
 }
